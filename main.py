@@ -11,7 +11,7 @@ from linebot.models import (
     MessageEvent, TextMessage, TextSendMessage,
 )
 import os
-from jinja2 import Markup
+import jinja2
 
 app = Flask(__name__)
 
