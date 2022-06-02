@@ -1,4 +1,3 @@
-
 from flask import Flask, request, abort
 
 from linebot import (
@@ -10,20 +9,18 @@ from linebot.exceptions import (
 from linebot.models import (
     MessageEvent, TextMessage, TextSendMessage,
 )
-import os
-import jinja2
+
+line_bot_api = LineBotApi('YOUR_CHANNEL_ACCESS_TOKEN')
+handler = WebhookHandler('YOUR_CHANNEL_SECRET')
 
 app = Flask(__name__)
 
-#環境変数取得
-YOUR_CHANNEL_ACCESS_TOKEN = os.environ["YOUR_CHANNEL_ACCESS_TOKEN"]
-YOUR_CHANNEL_SECRET = os.environ["YOUR_CHANNEL_SECRET"]
+@app.route("/")
+def say_hello():
+    return "Hello"
 
-line_bot_api = LineBotApi(YOUR_CHANNEL_ACCESS_TOKEN)
-handler = WebhookHandler(YOUR_CHANNEL_SECRET)
-
-@app.route("/yoshinani", methods=['POST'])
-def yoshinani():
+@app.route("/callback", methods=['POST'])
+def callback():
     # get X-Line-Signature header value
     signature = request.headers['X-Line-Signature']
 
@@ -35,6 +32,7 @@ def yoshinani():
     try:
         handler.handle(body, signature)
     except InvalidSignatureError:
+        print("Invalid signature. Please check your channel access token/channel secret.")
         abort(400)
 
     return 'OK'
@@ -48,6 +46,4 @@ def handle_message(event):
 
 
 if __name__ == "__main__":
-#    app.run()
-    port = int(os.getenv("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
+    app.run()
