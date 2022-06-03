@@ -42,8 +42,10 @@ def handle_message(event):
         wikipedia_url = wikipedia_page.url
         wikipedia_summary = wikipedia.summary(send_message)
         reply_message = '【' + wikipedia_title + '】\n' + wikipedia_summary + '\n\n' + '【詳しくはこちら】\n' + wikipedia_url
+        #候補が見つからなかった場合
     except wikipedia.exceptions.PageError:
         reply_message = '【' + send_message + '】\nについての情報は見つかりませんでした。'
+        #曖昧さ回避に引っかかった場合
     except wikipedia.exceptions.DisambiguationError as e:
         disambiguation_list = e.options
         reply_message = '複数の候補が返ってきました。以下の候補から、お探しの用語に近いものを再入力してください。\n\n'
